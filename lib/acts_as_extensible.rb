@@ -49,22 +49,23 @@ module ActsAsExtensible
           end
 
           class_eval <<-eos
-            after_save :update_#{model}_attributes
-
-            protected
-
-            def update_#{model}_attributes
-              build_#{model} if #{model}.nil?
-              #{model}.save
-            end
-          eos
-
-          class_eval <<-eos
             def column_for_attribute_#{prefix}#{column}
               #{model_class}.columns_hash["#{column}"]
             end
           eos
         end
+
+        class_eval <<-eos
+          after_save :update_#{model}_attributes
+
+          protected
+
+          def update_#{model}_attributes
+            build_#{model} if #{model}.nil?
+            #{model}.save
+          end
+        eos
+
         include ActsAsExtensible::ColumnDelegation::InstanceMethods
       end
 
